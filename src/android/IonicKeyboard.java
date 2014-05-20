@@ -35,12 +35,11 @@ public class IonicKeyboard extends CordovaPlugin{
                 int heightDiff = rootView.getRootView().getHeight() - (r.bottom - r.top);
                 if (heightDiff > 200 && heightDiff != previousHeightDiff) { // if more than 200 pixels, its probably a keyboard...
                     int keyboardHeight = (int)(heightDiff / density);
-                    appView.sendJavascript("cordova.plugins.Keyboard.isVisible = true");
-                    appView.sendJavascript("cordova.fireWindowEvent('native.showkeyboard', { 'keyboardHeight':" + Integer.toString(keyboardHeight)+"});");                   
-                }
-                else if ( heightDiff != previousHeightDiff && ( previousHeightDiff - heightDiff ) > 200 ){
-                    appView.sendJavascript("cordova.plugins.Keyboard.isVisible = false");
-                    appView.sendJavascript("cordova.fireWindowEvent('native.hidekeyboard')");
+                    appView.loadUrl("javascript:if (window.cordova  && cordova.plugins && cordova.plugins.Keyboard) { cordova.plugins.Keyboard.isVisible = true; }");
+                    appView.loadUrl("javascript:if (window.cordova) { cordova.fireWindowEvent('native.showkeyboard', { 'keyboardHeight':" + Integer.toString(keyboardHeight)+"}); }");
+                } else if ( heightDiff != previousHeightDiff && ( previousHeightDiff - heightDiff ) > 200 ){
+                    appView.loadUrl("javascript:if (window.cordova && cordova.plugins && cordova.plugins.Keyboard) { cordova.plugins.Keyboard.isVisible = false; }");
+                    appView.loadUrl("javascript:if (window.cordova) { cordova.fireWindowEvent('native.hidekeyboard'); }");
                 }
                 previousHeightDiff = heightDiff;
              }
